@@ -6,7 +6,9 @@
 package spaceshooting;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 /**
  *
@@ -22,6 +24,10 @@ public class SpaceShooting {
         
         JFrame frame=new JFrame();
         frame.setSize(600,900);
+        JPanel panel=new JPanel();
+        
+        panel.setBackground(Color.red);
+        frame.add(panel);
         
        MovingAliens game=new MovingAliens();
        

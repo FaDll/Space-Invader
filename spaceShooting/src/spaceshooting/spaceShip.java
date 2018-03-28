@@ -23,7 +23,7 @@ public class spaceShip  {
     public spaceShip(String imagepath)
     {
         
-        speed=5;
+        speed=10;
         this.Image=imagepath;
         shot.ImagePath="C:\\Users\\Ali\\Documents\\NetBeansProjects\\spaceShooting\\pics\\bullet.png";
         
@@ -31,18 +31,36 @@ public class spaceShip  {
     
     void moveRight()
     {
-        this.position.x+=speed;
+        
+        
+        if(this.position.x!=450)
+        {
+            
+            
+                   this.position.x+=speed;
+
+        }
+           
         
     }
     
     void moveLeft()
     {
-        this.position.x-=speed;
+        
+        
+       
+        if(this.position.x!=0)
+        {
+            
+            
+                   this.position.x-=speed;
+
+        }
         
     }
     
     
-    public void fireBullet()
+    public void fireBullet()          
     {
         
         shot.position.x=this.position.x+60;

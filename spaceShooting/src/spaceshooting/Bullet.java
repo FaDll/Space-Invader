@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package spaceshooting;
 
+
+package spaceshooting;
 import java.awt.Point;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,9 +24,10 @@ public class Bullet implements Runnable {
 public Bullet()
 {
     
-    speed=3;
+    speed=7;
     
 }
+
 
 
 public void moveup()
@@ -34,29 +36,46 @@ public void moveup()
     this.position.y-=speed;
     
 }
+public void movedown()
+{
+    
+    this.position.y+=speed;
+    
+}
+public void fire(int x, int y)
+{
+    
+    position.x=x;
+    
+    position.y=y;
+    
+}
 
     @Override
     public void run() {
         
         
         System.out.println("fired");
-        for (int i=0;i<400;i++)
-        {
+while(true)
+{//        {
           moveup();
            
-        try {
+        try{
+            
             Thread.sleep(10);
         } catch (InterruptedException ex) {
             Logger.getLogger(Bullet.class.getName()).log(Level.SEVERE, null, ex);
         }
-                  
-        } 
-    }
+
+        
+//        } 
+  }
     
-    
+  }  
     
 
-
-
+ 
+    
+   
 }
 

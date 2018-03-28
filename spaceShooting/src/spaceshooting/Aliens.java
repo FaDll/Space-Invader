@@ -17,8 +17,26 @@ public class Aliens {
     public int x,y;
     public int speedx;
     
+    public boolean canfire=true;
+    
+    public Bullet AlienBullet=new Bullet();
+    
     Point pos=new Point();
-  // public String img;
+    
+    public int tim=100;
+    
+    public int timoor=0;
+  //public String img;
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+    
+    
    
     public Aliens(int x,int y,int speedx)
     {
@@ -44,7 +62,7 @@ public class Aliens {
         }
         if (x<0)
         {
-            speedx= -speedx;
+            speedx=-speedx;
         }
     }
      
@@ -55,5 +73,5 @@ public class Aliens {
         
         
     }
-    
+     
 }

@@ -9,24 +9,52 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.Timer;
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
 
 /**
  *
  * @author Ali
  */
 public class MovingAliens extends JPanel implements Runnable {
+    
+    public boolean hit=false;
+    int alienXpos;
+    int alienYpos;
+    
+    Random rand=new Random();
+    
+    public int aliencounter=0;
+    
+   public boolean Aliencanhit=true;
+   
+
+   
+   
+    File bulletsound=new File("C:\\Users\\Ali\\Documents\\NetBeansProjects\\spaceShooting\\sounds\\bulletSound.wav");
+    AudioStream bulletAuduo;
+    InputStream bulletinput;
+    
     
     public ArrayList<Meteors> nayzak=new  ArrayList<Meteors>();
    
@@ -44,7 +72,9 @@ public class MovingAliens extends JPanel implements Runnable {
     
     public Aliens wa7sh=new Aliens(1000,1000,3);
     
+    
     public Aliens BossBullet=new Aliens(0,0,3);
+    
     
    // public Meteors bossattack=new Meteors(wa7sh.y,wa7sh.x,2);
             
@@ -60,16 +90,14 @@ public class MovingAliens extends JPanel implements Runnable {
     
      public MovingAliens() 
     {
-       setSize(600,600);
+       setSize(800,800);
          
        lbl1.setText("HP:"+" "+ String.valueOf(HP));
        
        lbl2.setText("S C O R E" +String.valueOf(counter));
        
         lbl2.setBounds(200, 300, 200, 200); 
-       
-       //lbl1.setBackground(Color.GREEN);
-       
+           
        lbl2.setFont(new Font("Courier", Font.BOLD,75));
      
      lbl1.setBounds(200, 100, 200, 200);
@@ -118,6 +146,9 @@ public class MovingAliens extends JPanel implements Runnable {
             }
             if (e.getKeyCode()==KeyEvent.VK_SPACE)
             {
+                
+                AudioPlayer.player.start(bulletAuduo);
+                
                 if(counter>=40)
                 {
                
@@ -136,6 +167,8 @@ public class MovingAliens extends JPanel implements Runnable {
            
         }
     }
+       
+      
      
        
        
@@ -144,14 +177,19 @@ public class MovingAliens extends JPanel implements Runnable {
         
         g.clearRect(0, 0, 600, 600);
         
+     
+        
         try
         {
-     
+        
+            bulletinput=new FileInputStream(bulletsound);
+            bulletAuduo=new AudioStream(bulletinput);
             
         BufferedImage IT = ImageIO.read(new File("C:\\Users\\Ali\\Documents\\NetBeansProjects\\spaceShooting\\pics\\invader.png"));
         BufferedImage bg = ImageIO.read(new File("C:\\Users\\Ali\\Documents\\NetBeansProjects\\spaceShooting\\pics\\backgroundooo.png"));    
         BufferedImage spaceimg = ImageIO.read(new File(safina.Image));
         BufferedImage bulletimg = ImageIO.read(new File(safina.shot.ImagePath));
+      ImageIcon livesimg=new ImageIcon("\"C:\\\\Users\\\\Ali\\\\Documents\\\\NetBeansProjects\\\\spaceShooting\\\\pics\\\\shipSkinSmall.gif\"");
         
       //  BufferedImage bulletimg1 = ImageIO.read(new File(safina.shot.ImagePath));//habd
       
@@ -161,9 +199,34 @@ public class MovingAliens extends JPanel implements Runnable {
         
         BufferedImage IT2 = ImageIO.read(new File("C:\\Users\\Ali\\Documents\\NetBeansProjects\\spaceShooting\\pics\\invader.png"));
         
+        BufferedImage Alienhits=ImageIO.read(new File("C:\\Users\\Ali\\Documents\\NetBeansProjects\\spaceShooting\\pics\\thunder-bolt-hi.png"));
+        
+        
+        
         g.drawImage(bg,0,0,null);
         g.drawImage(spaceimg,safina.position.x, safina.position.y,null);
         g.drawImage(bulletimg,safina.shot.position.x, safina.shot.position.y,null);
+        
+        
+       
+       
+             
+         
+      
+       
+        
+        if(hit)
+        {
+         g.setColor(Color.white); 
+                
+         g.drawString("+10", alienXpos, alienYpos-=1);
+         
+        }
+        
+       // g.setColor(Color.red);
+       // g.drawString("Level:", 400,250);
+         
+        
         
         if(fada2y.size()==0)
          {
@@ -190,13 +253,14 @@ public class MovingAliens extends JPanel implements Runnable {
             
            
             
-            wa7sh.move(this.getWidth());
+          wa7sh.move(this.getWidth());
             
              g.drawImage(IT2, BossBullet.pos.x, BossBullet.pos.y, null);
             
           
           }
         
+       
         
         if(counter>=40)
         {
@@ -216,40 +280,65 @@ public class MovingAliens extends JPanel implements Runnable {
             
             g.drawImage(IT, aalien.x, aalien.y, null);
             
+            g.drawImage(bulletimg,aalien.AlienBullet.position.x, aalien.AlienBullet.position.y, null);           
+
+            
         }
        
+//        for(int index=0; index<fada2y.size();index++)
+//        {
+//            
+//         //g.drawImage(Alienhits, fada2y.get(index).getX(), fada2y.get(index).getY(), null);
+//            
+//            
+//        }
+        
         
         }
         
         catch (IOException e)
         {
+            
             System.out.println(e);
+            
+            
         }
         
         
-        
+        int i=0;
         for (Aliens alien: fada2y)
         
         {
+            
+            
+            
+            
+            
+            
+            
+            
+              
          
-            if (safina.shot.position.distance(alien.x, alien.y)<=50)
+            if (safina.shot.position.distance(alien.getX(), alien.getY())<=50)
             {
+                
+                
+                
+                hit=true;    
+               alienXpos=fada2y.get(i).getX();
+               alienYpos=fada2y.get(i).getY();
+         
              
               counter=counter+10;
-//              
-//              if(counter>=40)
-//              {
-//                  try {
-//                      bulletimg1 = ImageIO.read(new File(safina.shot.ImagePath));
-//                  } catch (IOException ex) {
-//                      Logger.getLogger(MovingAliens.class.getName()).log(Level.SEVERE, null, ex);
-//                  }
-//                   g.drawImage(bulletimg1,safina.shot2.position.x+10, safina.shot2.position.y,null);
-//                   
-//              }
+
               
+            
+                
               
               lbl2.setText(String.valueOf(counter));
+              
+             
+              
               safina.shot.position.x=-10;
               safina.shot.position.y=-10;
               
@@ -258,11 +347,12 @@ public class MovingAliens extends JPanel implements Runnable {
 
               
               
-              
+               i++;
             
              repaint();
-                fada2y.remove(alien);
+             fada2y.remove(alien);
                 
+            
                 break;
                 
             }
@@ -291,13 +381,11 @@ public class MovingAliens extends JPanel implements Runnable {
               safina.shot2.position.y=-10;
               
                 wa7sh.x=-1000;
-                
-                
-              //  wa7sh.y=-10;
-                
+              
                 repaint();
                 
                 JOptionPane.showMessageDialog(null,"You Won!!. ", "Victory :D.",JOptionPane.ERROR_MESSAGE); 
+                
                              
             }
             
@@ -312,7 +400,7 @@ public class MovingAliens extends JPanel implements Runnable {
            safina.position.x=-1000;
             wa7sh.x=-1000;
             
-             repaint();          
+           repaint();          
            JOptionPane.showMessageDialog(null,"You lost. ", " Game Over.",JOptionPane.ERROR_MESSAGE); 
             
 
@@ -339,47 +427,96 @@ public class MovingAliens extends JPanel implements Runnable {
 //        }   
 //       }
     }   
+    
+    
+    
+    public int randooo=0;
      
     @Override
     public void run() {
        
+       
         while(true)
         {
             
-            for(Meteors meteor:nayzak)
-        {
+//        
             
-             meteor.movedown();
-            
-        }
-            
-          for (Aliens alien: fada2y)
-              
+          for (Aliens alien: fada2y)      
         {    
-                                                       
-              alien.move(this.getWidth());         
-              
+            randooo=rand.nextInt(500);
+            
+                    if(alien.canfire)
+                    {
+                       alien.tim=randooo;    
+                       alien.canfire=false;
+                       
+                    }
+                    alien.timoor++;
+                            
+                    if(alien.timoor+alien.tim>=1000)
+                    {
+                        
+                         alien.AlienBullet.fire(alien.getX(), alien.getY());
+                         alien.canfire=true;
+                         alien.timoor=0;
+                         
+                        
+                    }
+                        
+                                            
+                   alien.move(this.getWidth());   
+                   alien.AlienBullet.movedown();
+                    
+                   
+                   
+                    
+//                  if(aliencounter>=150+randooo&&alien.canfire)
+//                  {
+//                      
+//                     alien.AlienBullet.fire(alien.getX(), alien.getY());
+//                     
+//                     alien.canfire=false;
+//                  }
         }  
+          
+          //   aliencounter++;
 
-
+//             if(aliencounter>=600)
+//             {
+//             
+//              aliencounter=0;
+//              
+//              for (Aliens alien: fada2y)   
+//                  
+//                 {
+//                           
+//                      alien.canfire=true;      
+//                 }
+//
+//             }
+             
+             
             if(bosso)
            {
+               
               counter2++;
+              
            }
             if(counter2 >=200)                
              {
                  
-                 
                     BossBullet.pos.x=wa7sh.x;
                     BossBullet.pos.y=wa7sh.y;
-                    counter2=0;
-                    
+                    counter2=0;   
              }
+            
+            
      
-            BossBullet.movedown2(3);
-
-         
-           
+             BossBullet.movedown2(3);
+          
+                 
+            //System.out.println("alien counter now is :"+ aliencounter);
+    
             try {
                 
                 Thread.sleep(10);
@@ -390,9 +527,13 @@ public class MovingAliens extends JPanel implements Runnable {
                 Logger.getLogger(MovingAliens.class.getName()).log(Level.SEVERE, null, ex);
             }
             
-            
-        }
-        
     }
+}
     
 }
+
+        
+        
+    
+    
+
